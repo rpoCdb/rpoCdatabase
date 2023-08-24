@@ -1,5 +1,5 @@
 <img src="rpocdb_logo.png" width="600" />
 
-# v1.0
+# *rpoC* Database for Oral Microbiome Characterization
 
 Under construction!!
