@@ -1,4 +1,4 @@
-<img src="rpocdb_logo.png" width="600" />
+<img src="img/rpocdb_logo.png" width="600" />
 
 # *rpoC* Database for Oral Microbiome Metataxonomics
 
