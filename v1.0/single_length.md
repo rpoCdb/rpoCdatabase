@@ -131,7 +131,7 @@ wc -l missing_taxa #should be 0
 #ps -ef | grep "grep" | awk '{print $2}' | head -n 40 > kil2
 #cat kil2 | while read line; do kill $line; done
 ```
-##Get length distro for rpoC2
+## Get length distro for rpoC2
 Prepare file for R
 ```sh
 awk '{print $1, $5, $2, $3, $4, $6}' taxa.tsv | sed '1d' | sort | uniq > length_taxa
@@ -139,6 +139,7 @@ grep -c ";s__" length_taxa #numbers should match
 grep -c "d__" length_taxa
 sed 's/d__//' length_taxa | sed 's/;[pcofgs]__/\t/g' > length_taxa2
 ```
+Make length distro plots in R
 ```R
 library(ggplot2)
 distro <- read.table("./length_taxa2",row.names=1)
@@ -152,6 +153,12 @@ colnames(distro)[10] <- "genus" #rename column
 colnames(distro)[11] <- "species" #rename column
 median(distro$length)
 mean(distro$length)
+
+pdf("length_distro.kingdom.pdf", width = 20, height =20)
+ggplot(distro, aes(x=length, fill =kingdom)) + 
+  geom_histogram()+
+  theme_minimal()
+dev.off()
 
 pdf("length_distro.phyla.pdf", width = 20, height =20)
 ggplot(distro, aes(x=length, fill =phylum)) + 
