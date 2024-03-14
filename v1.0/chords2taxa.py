@@ -2,7 +2,7 @@ import pandas as pd
 df1 = pd.read_table("cords.tsv",delimiter='\t')
 
 df2 = pd.read_table("accs2taxa",delimiter='\t')
-df2.columns =['GCA', 'taxa']
+df2.columns =['GCA', 'genome', 'taxa']
 print(df2.head())
 
 df_all = pd.merge(df1, df2, on ='GCA', how='left', indicator=True)

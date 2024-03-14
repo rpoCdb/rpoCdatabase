@@ -91,9 +91,9 @@ Get the full taxonomy using asscesnion number
 #get archea taxonomy
 wget https://data.gtdb.ecogenomic.org/releases/latest/ar53_metadata.tsv.gz
 gzip -d ar53_metadata.tsv.gz
-awk -F "\t" '{print $1, $17}' ar53_metadata.tsv | sed 's/ /\t/' | sed 's/ /_/g' | sed 's/.*G/G/' > accs2taxa
+awk -F "\t" '{print $1, $46, $17}' ar53_metadata.tsv | sed 's/Complete Genome/Complete_genome/' | sed 's/ /\t/' | sed 's/ /\t/' | sed 's/ /_/g' | sed 's/.*G/G/' > accs2taxa
 #get bacteria taxonomy
-awk -F "\t" '{print $1, $17}' bac120_metadata.tsv | sed 's/ /\t/' | sed 's/ /_/g' | sed 's/.*G/G/' >> accs2taxa
+awk -F "\t" '{print $1, $46, $17}' bac120_metadata.tsv | sed 's/Complete Genome/Complete_genome/' | sed 's/ /\t/' | sed 's/ /\t/' | sed 's/ /_/g' | sed 's/.*G/G/' >> accs2taxa
 python3 chords2taxa.py #taxa.tsv is the output
 
 #get missing taxa
@@ -111,13 +111,13 @@ for i in $(cat missing_taxa); do
         echo $n wait
     fi
 done
-awk -F "\t" '{print $55, $17}' missed_taxa | sed 's/ /\t/' | sed 's/ /_/g' >> accs2taxa
+awk -F "\t" '{print $55, $46, $17}' missed_taxa | sed 's/Complete Genome/Complete_genome/' | sed 's/ /\t/' | sed 's/ /\t/' | sed 's/ /_/g' >> accs2taxa
 python3 chords2taxa.py #taxa.tsv is the output
 
 #get missing taxa second round
 grep left_only taxa.tsv | awk '{print $5}' > missing_taxa
 wc -l missing_taxa
-awk -F "\t" '{print $1, $17}' full_metadata.tsv | sed '1d' | sed 's/[GR][BS]_G/G/' | sed 's/ /\t/' | sed 's/ /_/g' >> accs2taxa
+awk -F "\t" '{print $1, $46, $17}' full_metadata.tsv | sed '1d' | sed 's/[GR][BS]_G/G/' | sed 's/Complete Genome/Complete_genome/' | sed 's/ /\t/' | sed 's/ /\t/' | sed 's/ /_/g' >> accs2taxa
 python3 chords2taxa.py #taxa.tsv is the output
 grep left_only taxa.tsv | awk '{print $5}' > missing_taxa
 wc -l missing_taxa #should be 0
@@ -134,7 +134,7 @@ wc -l missing_taxa #should be 0
 ## Get length distro for rpoC2
 Prepare file for R
 ```sh
-awk '{print $1, $5, $2, $3, $4, $6}' taxa.tsv | sed '1d' | sort | uniq > length_taxa
+awk '{print $1, $5, $6, $2, $3, $4, $7}' taxa.tsv | sed '1d' | sort | uniq > length_taxa
 grep -c ";s__" length_taxa #numbers should match
 grep -c "d__" length_taxa
 sed 's/d__//' length_taxa | sed 's/;[pcofgs]__/\t/g' > length_taxa2
@@ -143,19 +143,26 @@ Make length distro plots in R
 ```R
 library(ggplot2)
 distro <- read.table("./length_taxa2",row.names=1)
-colnames(distro)[4] <- "length" #rename column
-colnames(distro)[5] <- "kingdom" #rename column
-colnames(distro)[6] <- "phylum" #rename column
-colnames(distro)[7] <- "class" #rename column
-colnames(distro)[8] <- "order" #rename column
-colnames(distro)[9] <- "family" #rename column
-colnames(distro)[10] <- "genus" #rename column
-colnames(distro)[11] <- "species" #rename column
+colnames(distro)[2] <- "genome" #rename column
+colnames(distro)[5] <- "length" #rename column
+colnames(distro)[6] <- "kingdom" #rename column
+colnames(distro)[7] <- "phylum" #rename column
+colnames(distro)[8] <- "class" #rename column
+colnames(distro)[9] <- "order" #rename column
+colnames(distro)[10] <- "family" #rename column
+colnames(distro)[11] <- "genus" #rename column
+colnames(distro)[12] <- "species" #rename column
 median(distro$length)
 mean(distro$length)
 
 pdf("length_distro.kingdom.pdf", width = 20, height =20)
 ggplot(distro, aes(x=length, fill =kingdom)) + 
+  geom_histogram()+
+  theme_minimal()
+dev.off()
+
+pdf("length_distro.genome.pdf", width = 20, height =20)
+ggplot(distro, aes(x=length, fill =genome)) + 
   geom_histogram()+
   theme_minimal()
 dev.off()
