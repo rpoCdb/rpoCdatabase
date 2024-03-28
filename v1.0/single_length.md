@@ -109,6 +109,7 @@ Get exact number of how many genomes (both archea and bacteria) had a certain nu
 #get actual number of genomes with annoteted rpoC (does not include rpoC2)
 awk '{print $2}' metadata.tsv | sed '1d' | sort | uniq > gca_rpoc 
 #should get 73656 uniq genomes
+rm gca_number
 for i in $(cat gca_rpoc); do grep -c $i metadata.tsv >> gca_number; done
 #combine asscension number with the amount of rpoC annotations 
 paste gca_rpoc gca_number > temp
@@ -116,7 +117,7 @@ mv temp gca_number
 #make file with number or rpoC genes annotated and how many genomes were annotated
 echo "num_of_genomes" > num_rpoC # header
 wc -l gca_rpoc | awk '{print $1}' >> num_rpoC # total number of genomes with any amount of rpoc annotated
-awk '{print $14}' metadata.tsv | sort -n | uniq > number_annots.txt
+awk '{print $14}' metadata.tsv | sed '1d' | sort -n | uniq > number_annots.txt
 for i in $(cat number_annots.txt); do sed 's/\./_/' gca_number| grep -wc $i >> num_rpoC; done #get number of genomes with x amount of rpoc annotated 
 #get rownames
 echo "num_rpoC_genes" > row_name
@@ -126,21 +127,19 @@ for i in $(cat number_annots.txt); do echo "$i" >> row_name; done
 paste row_name num_rpoC > temp
 mv temp num_rpoC
 cat num_rpoC
-# num_rpoC_genes	num_of_genomes
-# any	74828
-# 1	68628
-# 2	4288
-# 3	331
-# 4	115
-# 5	130
-# 6	114
-# 7	38
-# 8	7
-# 9	3
-# 10	1
-# 11	0
-# 12	0
-# 13	1
+# num_rpoC_genes  num_of_genomes
+# any 73656
+# 1 68628
+# 2 4288
+# 3 331
+# 4 115
+# 5 130
+# 6 114
+# 7 38
+# 8 7
+# 9 3
+# 10  1
+# 13  1
 ```
 Get exact number of how many genomes (only bacteria) had a certain number of rpoC annotations
 ```sh
