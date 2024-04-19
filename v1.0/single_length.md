@@ -49,17 +49,7 @@ python3 chords2taxa.py #taxa.tsv is the output
 grep left_only taxa.tsv | awk '{print $5}' > missing_taxa
 wc -l missing_taxa #should be missing but had 24793
 cat ar53_metadata.tsv bac120_metadata.tsv > full_metadata.tsv
-n=0
-maxjobs=5 #can increase this number if you are feeling brave
-rm missed_taxa
-for i in $(cat missing_taxa); do
-    grep -wm 1 $i full_metadata.tsv >> missed_taxa &
-    # limit jobs
-    if (( $(($((++n)) % $maxjobs)) == 0 )) ; then
-        wait # wait until all have finished (not optimal, but most times good enough)
-        echo $n wait
-    fi
-done
+parallel -a missing_taxa -j 7 -k "grep -wm 1 '{}' full_metadata.tsv >> missed_taxa"
 awk -F "\t" '{print $55, $46, $17}' missed_taxa | sed 's/Complete Genome/Complete_genome/' | sed 's/ /\t/' | sed 's/ /\t/' | sed 's/ /_/g' >> accs2taxa
 python3 chords2taxa.py #taxa.tsv is the output
 
