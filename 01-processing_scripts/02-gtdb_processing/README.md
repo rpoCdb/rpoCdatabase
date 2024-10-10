@@ -66,9 +66,35 @@ for f in gtdb_genomes_reps_r214/*fna;
 	;done 1>prokka_restart.out 2>prokka_restart.err
 ```
 
+<<<<<<< Updated upstream:01-processing_scripts/02-gtdb_processing/README.md
 Again, pull global GTDB files into a new folder for ease of access (these are highly nested)
 
 ```bash
+=======
+
+for f in *fna; do \\
+	singularity exec prokka.sif prokka \\
+			--cpus 60 \\
+			--outdir $f.prokka \\
+			--addgenes \\
+			--norrna \\
+			--notrna \
+			$f
+		; done 1>prokka.out 2>prokka.err &
+
+
+for f in *fna; do
+    singularity exec prokka.sif prokka \
+        --cpus 60 \
+        --outdir "$f.prokka" \
+        --addgenes \
+        --norrna \
+        --notrna \
+        "$f"
+done > prokka.out 2> prokka.err &
+
+## Pull global GTDB files into a new folder for ease of access
+>>>>>>> Stashed changes:01-processing_scripts/02-gtdb_processing/database_build.sh
 cd /home/allie/rpoCdb/gtdb_version1.0
 mkdir gtdb_prokka_concat && cd gtdb_genomes_reps_r214
 # pull genbank file for all samples into single genbank
