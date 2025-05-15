@@ -7,10 +7,12 @@ Under construction!! We plan on building this repository to be a resource for rp
 
 Stay tuned for updates!
 
-Authors: Allison E. Mann, Suzanne Crull
+Authors: Allison E. Mann, Suzanne Crull, Gomathi Nayagam Sankaranarayanan
 
-## Why rpoC?
+[Database documentation](https://rpocdb.github.io/)
 
-## Version 1.0
+## Published papers using rpoC!
 
-## References
+* [Heterogeneous lineage-specific arginine deiminase expression within dental microbiome species](https://journals.asm.org/doi/10.1128/spectrum.01445-23)
+* [Impact of HIV on the oral microbiome of children living in Sub-Saharan Africa, determined by using an rpoC gene fragment metataxonomic approach](https://journals.asm.org/doi/10.1128/spectrum.00871-23)
+
